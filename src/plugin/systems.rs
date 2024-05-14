@@ -423,7 +423,7 @@ pub fn apply_rigid_body_user_changes(
                             .insert(handle.0, *global_transform);
 
                         // Log the state before insertion
-                        log_transform_set("Before Insert", &handle.0, Some(global_transform), &context.last_body_transform_set);
+                        log_transform_set("After Insert", &handle.0, Some(global_transform), &context.last_body_transform_set);
                     }
                 }
                 _ => {
@@ -437,7 +437,7 @@ pub fn apply_rigid_body_user_changes(
                             .insert(handle.0, *global_transform);
 
                         // Log the state before insertion
-                        log_transform_set("Before Insert", &handle.0, Some(global_transform), &context.last_body_transform_set);
+                        log_transform_set("After Insert", &handle.0, Some(global_transform), &context.last_body_transform_set);
                     }
                 }
             }
@@ -664,7 +664,7 @@ pub fn writeback_rigid_bodies(
 
                             // Log before insertion
                             log_transform_set("Before Insert (Parent Global Transform)", &handle, Some(&new_global_transform), &context.last_body_transform_set);
-
+                            println!();
                         } else {
                             // In 2D, preserve the transform `z` component that may have been set by the user
                             #[cfg(feature = "dim2")]
@@ -695,6 +695,7 @@ pub fn writeback_rigid_bodies(
 
                             // Log after insertion
                             log_transform_set("After Insert (Interpolated Pos)", &handle, Some(&new_transform), &context.last_body_transform_set);
+                            println!();
                         }
                     }
 
