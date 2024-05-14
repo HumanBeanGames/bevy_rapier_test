@@ -282,13 +282,15 @@ fn log_transform_set(
     last_transform_set: &HashMap<RigidBodyHandle, GlobalTransform>,
 ) {
     if handle.0.index() == 53 {
-        println!(
-            "{}: Handle = {:?}, Transform = {:?}, Last Transform Set = {:?}",
-            label, handle, transform, last_transform_set.get(handle)
-        );
+        let prefix_new = "New Transform:           ";
+        let prefix_current = "Current Stored Transform:";
+        let new_transform_str = format!("{:?}", transform);
+        let current_transform_str = format!("{:?}", last_transform_set.get(handle));
+
+        println!("{} {}", prefix_new, new_transform_str);
+        println!("{} {}", prefix_current, current_transform_str);
     }
 }
-
 
 /// System responsible for applying changes the user made to a rigid-body-related component.
 pub fn apply_rigid_body_user_changes(
