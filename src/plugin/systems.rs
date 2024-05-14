@@ -374,7 +374,7 @@ pub fn apply_rigid_body_user_changes(
             if config.force_update_from_transform_changes {
                 true
             } else if let Some(prev) = last_transform_set.get(handle) {
-                *prev != *transform
+                !compare_global_transforms_with_epsilon(prev, transform, 0.0001)
             } else {
                 true
             }
@@ -1888,4 +1888,21 @@ mod tests {
             ));
         }
     }
+}
+
+fn compare_global_transforms_with_epsilon(
+    a: &GlobalTransform,
+    b: &GlobalTransform,
+    epsilon: f32,
+) -> bool {
+    let a_matrix = a.affine().matrix3;
+    let b_matrix = b.affine().matrix3;
+
+    let a_translation = a.affine().translation;
+    let b_translation = b.affine().translation;
+
+    (a_matrix.x_axis - b_matrix.x_axis).abs().max_element() < epsilon &&
+        (a_matrix.y_axis - b_matrix.y_axis).abs().max_element() < epsilon &&
+        (a_matrix.z_axis - b_matrix.z_axis).abs().max_element() < epsilon &&
+        (a_translation - b_translation).abs().max_element() < epsilon
 }
