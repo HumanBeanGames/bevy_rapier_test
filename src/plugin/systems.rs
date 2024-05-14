@@ -411,7 +411,6 @@ pub fn apply_rigid_body_user_changes(
             // Log the state before insertion
             log_transform_set("Before Insert", &handle.0, Some(global_transform), &context.last_body_transform_set);
 
-
             match rb.body_type() {
                 RigidBodyType::KinematicPositionBased => {
                     if transform_changed == Some(true) {
@@ -664,8 +663,8 @@ pub fn writeback_rigid_bodies(
                                 .last_body_transform_set
                                 .insert(handle, new_global_transform);
 
-                            // Log before insertion
-                            log_transform_set("Before Insert (Parent Global Transform)", &handle, Some(&new_global_transform), &context.last_body_transform_set);
+                            // Log after insertion
+                            log_transform_set("After Insert (Parent Global Transform)", &handle, Some(&new_global_transform), &context.last_body_transform_set);
                         } else {
                             // In 2D, preserve the transform `z` component that may have been set by the user
                             #[cfg(feature = "dim2")]
