@@ -34,6 +34,7 @@ use {
 use crate::control::CharacterCollision;
 #[cfg(feature = "dim2")]
 use bevy::math::Vec3Swizzles;
+use rapier::parry::partitioning::IndexedData;
 
 /// Components that will be updated after a physics step.
 pub type RigidBodyWritebackComponents<'a> = (
@@ -280,10 +281,12 @@ fn log_transform_set(
     transform: Option<&GlobalTransform>,
     last_transform_set: &HashMap<RigidBodyHandle, GlobalTransform>,
 ) {
-    println!(
-        "{}: Handle = {:?}, Transform = {:?}, Last Transform Set = {:?}",
-        label, handle, transform, last_transform_set.get(handle)
-    );
+    if handle.0.index() == 53 {
+        println!(
+            "{}: Handle = {:?}, Transform = {:?}, Last Transform Set = {:?}",
+            label, handle, transform, last_transform_set.get(handle)
+        );
+    }
 }
 
 
