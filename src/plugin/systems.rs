@@ -686,7 +686,7 @@ pub fn writeback_rigid_bodies(
 
                             let new_transform = GlobalTransform::from(interpolated_pos);
 
-                            /*// Log before insertion
+                            // Log before insertion
                             log_transform_set("Before Insert (Interpolated Pos)", &handle, Some(&new_transform), &context.last_body_transform_set);
 
 
@@ -697,7 +697,7 @@ pub fn writeback_rigid_bodies(
 
                             // Log after insertion
                             log_transform_set("After Insert (Interpolated Pos)", &handle, Some(&new_transform), &context.last_body_transform_set);
-                            if handle.0.index() == 53 { println!()};*/
+                            if handle.0.index() == 53 { println!()};
                         }
                     }
 
