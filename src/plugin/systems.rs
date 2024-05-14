@@ -274,6 +274,19 @@ pub fn apply_collider_user_changes(
     }
 }
 
+fn log_transform_set(
+    label: &str,
+    handle: &RigidBodyHandle,
+    transform: Option<&GlobalTransform>,
+    last_transform_set: &HashMap<RigidBodyHandle, GlobalTransform>,
+) {
+    println!(
+        "{}: Handle = {:?}, Transform = {:?}, Last Transform Set = {:?}",
+        label, handle, transform, last_transform_set.get(handle)
+    );
+}
+
+
 /// System responsible for applying changes the user made to a rigid-body-related component.
 pub fn apply_rigid_body_user_changes(
     mut context: ResMut<RapierContext>,
@@ -392,6 +405,10 @@ pub fn apply_rigid_body_user_changes(
                 ))
             });
 
+            // Log the state before insertion
+            log_transform_set("Before Insert", &handle.0, Some(global_transform), &context.last_body_transform_set);
+
+
             match rb.body_type() {
                 RigidBodyType::KinematicPositionBased => {
                     if transform_changed == Some(true) {
@@ -401,6 +418,9 @@ pub fn apply_rigid_body_user_changes(
                         context
                             .last_body_transform_set
                             .insert(handle.0, *global_transform);
+
+                        // Log the state before insertion
+                        log_transform_set("Before Insert", &handle.0, Some(global_transform), &context.last_body_transform_set);
                     }
                 }
                 _ => {
@@ -412,6 +432,9 @@ pub fn apply_rigid_body_user_changes(
                         context
                             .last_body_transform_set
                             .insert(handle.0, *global_transform);
+
+                        // Log the state before insertion
+                        log_transform_set("Before Insert", &handle.0, Some(global_transform), &context.last_body_transform_set);
                     }
                 }
             }
@@ -629,9 +652,16 @@ pub fn writeback_rigid_bodies(
                             let new_global_transform =
                                 parent_global_transform.mul_transform(*transform);
 
+                            // Log before insertion
+                            log_transform_set("Before Insert (Parent Global Transform)", &handle, Some(&new_global_transform), &context.last_body_transform_set);
+
                             context
                                 .last_body_transform_set
                                 .insert(handle, new_global_transform);
+
+                            // Log before insertion
+                            log_transform_set("Before Insert (Parent Global Transform)", &handle, Some(&new_global_transform), &context.last_body_transform_set);
+
                         } else {
                             // In 2D, preserve the transform `z` component that may have been set by the user
                             #[cfg(feature = "dim2")]
@@ -649,9 +679,19 @@ pub fn writeback_rigid_bodies(
                                 transform.translation = interpolated_pos.translation;
                             }
 
+                            let new_transform = GlobalTransform::from(interpolated_pos);
+
+                            // Log before insertion
+                            log_transform_set("Before Insert (Interpolated Pos)", &handle, Some(&new_transform), &context.last_body_transform_set);
+
+
                             context
                                 .last_body_transform_set
                                 .insert(handle, GlobalTransform::from(interpolated_pos));
+
+
+                            // Log after insertion
+                            log_transform_set("After Insert (Interpolated Pos)", &handle, Some(&new_transform), &context.last_body_transform_set);
                         }
                     }
 
